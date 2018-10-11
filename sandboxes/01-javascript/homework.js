@@ -36,8 +36,7 @@ var requestPromise = require('request-promise')
 
 async function run() {
   const person = await requestPromise(PERSON_REQUEST)
-  const vehiclesUrls = person.vehicles
-  const vehicles = await Promise.all(vehiclesUrls.map(url => {
+  const vehicles = await Promise.all(person.vehicles.map(url => {
     return requestPromise({ uri: url, json: true })
   }))
   vehicles.map(vehicle => console.log(vehicle.name))

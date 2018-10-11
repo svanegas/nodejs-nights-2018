@@ -26,7 +26,7 @@ callApi('api.google.com', (err, data) => {
 
 // ------ Promise style -------------------------------------------------------
 
-/*
+
 
 function callApi(url) {
   return new Promise((resolve, reject) => {
@@ -57,7 +57,7 @@ callApi('api.google.com')
     console.error(err, 'Something bad happened')
   })
 
-*/
+
 
 // ------ Async await style ---------------------------------------------------
 
@@ -78,14 +78,14 @@ async function run() {
     callApi('api.microsoft.com'),
     callApi('api.apple.com')
   })
-  
+
   console.log(data)
   console.log(innerData)
   console.log(`${data}, ${subData}`)
   */
 }
 
-// Result of an async function is Promise 
+// Result of an async function is Promise
 run()
   .then(() => console.log('All APIs called'))
   .catch(err => {
