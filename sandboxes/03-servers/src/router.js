@@ -1,8 +1,8 @@
 'use strict'
 
 const Router = require('koa-router')
-const dogs = require('./dogs')
-const { validate } = require('./utils/validator')
+const controller = require('./controller')
+const schemas = require('./schemas')
 const log = require('./logger')
 
 const router = new Router()
@@ -12,17 +12,14 @@ router.get('/', ctx => {
 })
 
 router.get('/dogs', ctx => {
-  ctx.body = dogs
+  ctx.body = controller.dogs
 })
 
 router.get('/dogs/:id', ctx => {
-  const dog = dogs.find(item => item.id === Number(ctx.params.id))
-
+  const dog = controller.findDog(ctx.params.id)
   if (!dog) {
     ctx.status = 404
-
     log.warn('No dog found')
-
     return
   }
 
@@ -30,34 +27,8 @@ router.get('/dogs/:id', ctx => {
 })
 
 router.post('/dogs', ctx => {
-  const schema = {
-    type: 'Object',
-    required: true,
-    properties: {
-      id: {
-        type: 'integer',
-        required: true,
-      },
-      name: {
-        type: 'string',
-        required: true,
-      },
-      breed: {
-        type: 'string',
-        required: true,
-      },
-      birthYear: {
-        type: 'number',
-      },
-      photo: {
-        type: 'string',
-        format: 'url',
-      },
-    },
-  }
-
-  const validation = validate(ctx.request.body, schema)
-
+  const schema = schemas.postSchema
+  const validation = controller.validate(ctx.request.body, schema)
   if (!validation.valid) {
     ctx.status = 400
     ctx.body = {
@@ -66,9 +37,49 @@ router.post('/dogs', ctx => {
     return
   }
 
-  dogs.push(ctx.request.body)
+  controller.dogs.push(ctx.request.body)
 
-  ctx.body = dogs
+  ctx.body = controller.dogs
+})
+
+router.put('/dogs/:id', ctx => {
+  const dog = controller.findDog(ctx.params.id)
+  if (!dog) {
+    ctx.status = 404
+    log.warn('No dog found')
+    return
+  }
+
+  const schema = schemas.putSchema
+  const validation = controller.validate(ctx.request.body, schema)
+  if (!validation.valid) {
+    ctx.status = 400
+    ctx.body = {
+      errors: validation.errors,
+    }
+    return
+  }
+
+  const body = ctx.request.body
+  body.id = dog.id
+
+  // TODO: Don't know how to replace the existing dog's properties.
+  // `dog` needs to be `body`, I don't know how.
+
+  ctx.body = dog
+})
+
+router.delete('/dogs/:id', ctx => {
+  const dog = controller.findDog(ctx.params.id)
+  if (!dog) {
+    ctx.status = 404
+    log.warn('No dog found')
+    return
+  }
+
+  controller.deleteDog(ctx.params.id)
+
+  ctx.body = controller.dogs
 })
 
 module.exports = router.routes()

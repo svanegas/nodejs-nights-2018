@@ -16,10 +16,6 @@ app.use(koaBody())
 
 app.use(router)
 
-const services = {
-  server: null,
-}
-
 app.start = async () => {
   log.info('Starting server')
 
@@ -34,8 +30,6 @@ app.start = async () => {
 
 app.stop = () => {
   log.info('Shutting down server')
-
-  services.server.close()
 }
 
 app.start()
