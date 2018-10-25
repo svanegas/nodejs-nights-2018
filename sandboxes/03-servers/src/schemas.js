@@ -3,6 +3,7 @@
 const postSchema = {
   type: 'Object',
   required: true,
+  additionalProperties: false,
   properties: {
     id: {
       type: 'integer',
@@ -29,6 +30,7 @@ const postSchema = {
 const putSchema = {
   type: 'Object',
   required: true,
+  additionalProperties: false,
   properties: {
     name: {
       type: 'string',
@@ -51,6 +53,7 @@ const putSchema = {
 const patchSchema = {
   type: 'Object',
   required: true,
+  additionalProperties: false,
   properties: {
     name: {
       type: 'string',

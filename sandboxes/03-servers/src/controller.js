@@ -20,11 +20,12 @@ function updateDog(id, params) {
   const dog = findDog(id)
   if (!dog) return dog
 
-  for (let key in params) {
-    if (!dog.hasOwnProperty(key) || key == 'id') continue
-
-    dog[key] = params[key]
-  }
+  Object.assign(dog, params)
+  // for (let key in params) {
+  //   if (!dog.hasOwnProperty(key) || key == 'id') continue
+  //
+  //   dog[key] = params[key]
+  // }
   return dog
 }
 
